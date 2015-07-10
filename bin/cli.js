@@ -28,7 +28,7 @@ var Log = require('../lib/logger'),
     tunnel = require('tunnel'),
     http = require('http'),
     ConfigParser = require('../lib/configParser').ConfigParser,
-    serverPort = 8888,
+    serverPort = config.port || 8888,
     server,
     timeout,
     activityTimeout,
@@ -113,6 +113,11 @@ function getTestBrowserInfo(browserString, path) {
 }
 
 function launchServer() {
+  if (config.tunnelOnly) {
+    logger.info('Test runner disabled;');
+    logger.info('Connecting to existing server on port ' + config.port);
+    return;
+  }
   logger.debug('Launching server on port:', serverPort);
 
   server = new Server(client, workers);
